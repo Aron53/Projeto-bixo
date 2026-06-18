@@ -26,7 +26,7 @@ Com base no desenho técnico bidimensional gerado na aba de *Drawing*, a estrutu
 
 ## 📸 Visualização do Projeto
 
-![Desenho Técnico do Robô](chassi_medidas/Drawing%201.png)
+![Desenho Técnico do Robô](chassi_medidas/Drawing%201_novo.png)
 
 ---
 
