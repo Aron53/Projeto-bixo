@@ -55,3 +55,6 @@ Os arquivos foram separados dentro do repositório de acordo com as diretrizes d
   * `espacador.stl` -> Pilares de união e distanciamento entre as chapas.
   * `suporte_motor.stl` -> Presilhas/suportes estruturais para os motores DC amarelos.
   * `varinha_estetica.stl` -> Elemento de personalização do topo.
+
+## Circuito
+![Esquema do circuito](circuito\sketch_circuito_bb.png)
