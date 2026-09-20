@@ -6,9 +6,7 @@ Repositório oficial do Grupo 3 no Projeto Bixo 2026. Desenvolvimento de um rob�
 ## 👥 Autores (Membros do Grupo 3)
 
 * **[João Neto]**
-* **[Miguel Novais]**
 * **[Thiago Perini]**
-* **[Leonardo Ferreira]**
 * **[Mateus]**
 
 ---
@@ -58,3 +56,39 @@ Os arquivos foram separados dentro do repositório de acordo com as diretrizes d
 
 ## Circuito
 ![Esquema do circuito](circuito\sketch_circuito_bb.png)
+
+---
+
+## 🧭 Odometria
+
+A odometria estima **onde o robô está** (`x`, `y` e orientação `θ`) a partir do giro das rodas. Cada motor tem um **encoder** que gera pulsos ao girar; contando esses pulsos, calculamos quanto cada roda andou e como o robô se moveu.
+
+### ⚙️ Como funciona
+
+1. **Contagem de pulsos:** uma interrupção dispara a cada pulso do canal A do encoder. O canal B indica o sentido: `HIGH` soma (`ticks++`) e `LOW` subtrai (`ticks--`).
+2. **Leitura a cada 50 ms (20 Hz):** o `loop()` usa `millis()`, sem `delay()`. Os contadores são copiados com as interrupções desligadas por um instante, para não corromper os dados.
+3. **Cálculo:** a diferença de pulsos desde a última leitura vira distância de cada roda, deslocamento e rotação do robô, e a posição é atualizada (fórmulas abaixo).
+
+### 📏 Parâmetros
+
+| Parâmetro | Símbolo | Variável no código | Valor |
+|---|---|---|---|
+| Raio da roda | R | `RAIO_RODA` | 0,0336 m |
+| Distância entre as rodas | L | `DIST_RODAS` | 0,2140 m |
+| Pulsos por volta da roda | N | `PPR_ENCODER` | 330 |
+| Tempo de amostragem | Δt | `DT` | 0,05 s |
+
+### 🧮 Fórmulas
+
+Os índices $R$ e $L$ indicam a roda direita e a esquerda.
+
+| O que calcula | Fórmula | Em palavras |
+|---|---|---|
+| Distância de cada roda | $d = \dfrac{ticks}{N}\cdot 2\pi R$ | fração de volta dada × perímetro da roda |
+| Deslocamento do robô | $\Delta s = \dfrac{d_R + d_L}{2}$ | média do que as duas rodas andaram |
+| Variação do ângulo | $\Delta\theta = \dfrac{d_R - d_L}{L}$ | a diferença entre as rodas faz o robô girar |
+| Posição | $\Delta x = \Delta s\cos\theta_k \quad \Delta y = \Delta s\sin\theta_k$ | decompõe o deslocamento em `x` e `y` |
+| Velocidades | $v = \dfrac{\Delta s}{\Delta t} \quad \omega = \dfrac{\Delta\theta}{\Delta t}$ | divide pelo tempo do ciclo (usadas no PID) |
+
+A pose é acumulada a cada ciclo: $x_{k+1} = x_k + \Delta x$, $y_{k+1} = y_k + \Delta y$ e $\theta_{k+1} = \theta_k + \Delta\theta$ (no código, `pos_x`, `pos_y` e `pos_theta`).
+
