@@ -6,7 +6,7 @@ Repositório oficial do Grupo 3 no Projeto Bixo 2026. Desenvolvimento de um rob�
 ## 👥 Autores (Membros do Grupo 3)
 
 * **[João Neto]**
-* **[Thiago Perini]**
+* **[Tiago Perini]**
 * **[Mateus]**
 
 ---
