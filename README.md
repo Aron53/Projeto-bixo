@@ -92,3 +92,26 @@ Os índices $R$ e $L$ indicam a roda direita e a esquerda.
 
 A pose é acumulada a cada ciclo: $x_{k+1} = x_k + \Delta x$, $y_{k+1} = y_k + \Delta y$ e $\theta_{k+1} = \theta_k + \Delta\theta$ (no código, `pos_x`, `pos_y` e `pos_theta`).
 
+---
+
+## 🎮 Controle PID
+
+O controle PID ajusta o PWM enviado a cada motor para que a velocidade real da roda (medida pela odometria) siga uma velocidade desejada (`setpoint`), vinda futuramente do ROS 2.
+
+### ⚙️ Como funciona
+
+1. **Erro:** a cada ciclo de 50 ms, compara a velocidade desejada com a velocidade medida da roda.
+2. **Três termos:** o controle soma uma resposta proporcional ao erro atual, uma integral que acumula o erro ao longo do tempo, e uma derivada que reage à taxa de variação do erro.
+3. **Saída em PWM:** a soma dos três termos vira o sinal enviado à Ponte H (0–255), limitado nesse intervalo, e o sinal do PWM decide o sentido de giro do motor.
+
+### 🧮 Fórmulas
+
+| O que calcula | Fórmula | Em palavras |
+|---|---|---|
+| Erro | $e_k = setpoint - v_{medida}$ | quanto falta para atingir a velocidade desejada |
+| Termo Proporcional | $P = K_p \cdot e_k$ | resposta proporcional ao erro atual |
+| Termo Integral | $I = K_i \cdot \sum e_k \cdot \Delta t$ | corrige erro acumulado (ex: atrito constante) |
+| Termo Derivativo | $D = K_d \cdot \dfrac{e_k - e_{k-1}}{\Delta t}$ | reage à velocidade de variação do erro, amortece oscilações |
+| Saída (PWM) | $u = P + I + D$ | soma dos três termos, limitada a [0, 255] |
+
+$K_p$, $K_i$ e $K_d$ são os ganhos do controlador, ainda a serem ajustados por tentativa e erro.
